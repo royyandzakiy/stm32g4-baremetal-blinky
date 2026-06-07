@@ -6,7 +6,7 @@ Successfully running on a win11 machine
 
 Based on this playlist: https://www.youtube.com/playlist?list=PLzijHiItASCkDCIj_4c-66Lve59c5lylq
 
-[![E-Paper Climate Logger](https://img.youtube.com/vi/5VjgzlnC6I0&/maxresdefault.jpg)](https://www.youtube.com/watch?v=5VjgzlnC6I0&list=PLzijHiItASCkDCIj_4c-66Lve59c5lylq&index=9&t=15s)
+[![AsarbreTech - STM32 Bare Metal Software from scratch](https://img.youtube.com/vi/5VjgzlnC6I0/maxresdefault.jpg)](https://youtu.be/5VjgzlnC6I0)
 
 ## Success Build, Flash, Blinking
 
