@@ -1,12 +1,6 @@
 # STM32 Baremetal Blinky
 
-An attempt to understand how baremetal works
-
-Successfully running on a win11 machine
-
-Based on this playlist: https://www.youtube.com/playlist?list=PLzijHiItASCkDCIj_4c-66Lve59c5lylq
-
-[![AsarbreTech - STM32 Bare Metal Software from scratch](https://img.youtube.com/vi/5VjgzlnC6I0/maxresdefault.jpg)](https://youtu.be/5VjgzlnC6I0)
+An attempt to understand how baremetal works via STM32
 
 Checkout the learning docs:
 - [General Block Diagram](learn/BLOCK_DIAGRAM.md)
@@ -14,7 +8,11 @@ Checkout the learning docs:
 - [Setting up Vector Table](learn/VECTOR_TABLE.md)
 - [Flash > RAM Copy](learn/FLASH_RAM_COPY.md)
 
+Also read all the comments inside `main.c` and `linker_sciprt.ld` to understand more deeply
+
 ## Success Build, Flash, Blinking
+
+Successfully build & flash using a win11 machine
 
 ```bash
 C:\project-coding\iot\202606\stm32-baremetal-blinky>make
@@ -67,3 +65,9 @@ Software reset is performed
 
 C:\project-coding\iot\202606\stm32-baremetal-blinky>
 ```
+
+## References
+
+Code and structure is initially based on this playlist, then heavily modified: https://www.youtube.com/playlist?list=PLzijHiItASCkDCIj_4c-66Lve59c5lylq
+
+[![AsarbreTech - STM32 Bare Metal Software from scratch](https://img.youtube.com/vi/5VjgzlnC6I0/maxresdefault.jpg)](https://youtu.be/5VjgzlnC6I0)
