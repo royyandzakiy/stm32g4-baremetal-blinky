@@ -8,6 +8,12 @@ Based on this playlist: https://www.youtube.com/playlist?list=PLzijHiItASCkDCIj_
 
 [![AsarbreTech - STM32 Bare Metal Software from scratch](https://img.youtube.com/vi/5VjgzlnC6I0/maxresdefault.jpg)](https://youtu.be/5VjgzlnC6I0)
 
+Checkout the learning docs:
+- [General Block Diagram](learn/BLOCK_DIAGRAM.md)
+- [Finding the correct Registers](learn/REGISTER_FINDING.md)
+- [Setting up Vector Table](learn/VECTOR_TABLE.md)
+- [Flash > RAM Copy](learn/FLASH_RAM_COPY.md)
+
 ## Success Build, Flash, Blinking
 
 ```bash
