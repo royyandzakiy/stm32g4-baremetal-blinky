@@ -137,7 +137,9 @@ static inline void delay(volatile uint32_t counter) {
 // _sdata/_edata: start/end of .data in RAM (initialized data destination)
 // _sidata: start of .data initial values in Flash (copy source)
 extern uint32_t _sbss, _ebss, _sdata, _edata, _sidata;
-extern void _estack(void); // creating the symbol _estack as a trick just so it can be referred to in linker
+
+extern void _estack(void); // declaring _estack as a function pointer to comply with the vector_table structure, it is a TRICK for the sake of putting it next to other interrupt handlers. the hardware will read it as a raw 32-bit address placed in the Stack Pointer (SP) register, used as initial stack pointer position right after boot (will change overtime as the Stack Pointer moves around). _estack gets calculated during linking process inside the linker script
+
 extern int main(void);
 
 // Reset handler: this is the entry point ENTRY(_reset) after power-on/reset
