@@ -3,11 +3,30 @@
 
 // GPIO and RCC register definitions
 #define BIT(x) (1UL << (x))
-#define PIN(bank, num) ((((bank) - 'A') << 8) | (num))
-#define PINNO(pin) ((pin) & 255)
-#define PINBANK(pin) ((pin) >> 8)
+
+/*
+uint16_t led = CREATE_PIN_MASK('B', 7);
+
+Step by step:
+('B' - 'A') = 1          	(bank index)
+1 << 8 = 0x100           	(bank in upper byte)
+0x100 | 7 = 0x107        	(pin number in lower byte)
+led = 0x0107
+
+GET_PIN_NO(0x0107) = 0x07 = 7    (pin number)
+GET_PIN_BANK(0x0107) = 0x01 = 1  (bank B)
+*/
+#define CREATE_PIN_MASK(bank, num) ((((bank) - 'A') << 8) | (num))
+#define GET_PIN_NO(pin) ((pin) & 255)	// Extract pin number (lower 8 bits)
+#define GET_PIN_BANK(pin) ((pin) >> 8)	// Extract bank index (upper 8 bits)
 
 // these types are used to represent and with it read/wrire to the hardware registers. it acts as register offset (4 bytes each), added to a given base register
+/*
+gpio->MODER;  // Actually accesses address 0x48000000 + 0x00
+gpio->OTYPER; // Actually accesses address 0x48000000 + 0x04
+gpio->OSPEEDR;// Actually accesses address 0x48000000 + 0x08
+gpio->BSRR;   // Actually accesses address 0x48000000 + 0x18
+*/
 typedef struct {
 	volatile uint32_t MODER;
 	volatile uint32_t OTYPER;
@@ -64,11 +83,22 @@ typedef struct {
 	volatile uint32_t CCIPR2;
 } RCC_Registers;
 
-#define GPIO(bank) ((GPIO_TypeDef *)(0x48000000 + 0x400 * (bank)))
-#define RCC ((RCC_TypeDef *)0x40021000)
+/*
+calculates base address for the selected GPIO Port
+
+GPIO_Registers* gpioa = GPIO(GET_PIN_BANK('A'));
+GPIO_Registers* gpioa = GPIO(0);
+GPIO_Registers* gpioa = ((GPIO_Registers*)(0x48000000 + (0x400 * 0)));
+*/
+
+#define BASE_GPIO_REG 	0x48000000
+#define GPIO_REG_OFFSET 0x400		// 4 Bytes
+#define BASE_RCC_REG 	0x40021000
+#define GPIO(bank) 		((GPIO_Registers *)(BASE_GPIO_REG + (GPIO_REG_OFFSET * (bank))))
+#define RCC 			((RCC_Registers *)BASE_RCC_REG)
 
 enum {
-	GPIO_MODE_INPUT,
+	GPIO_MODE_INPUT = 0,
 	GPIO_MODE_OUTPUT,
 	GPIO_MODE_AF,
 	GPIO_MODE_ANALOG
@@ -78,15 +108,15 @@ int counter = 42;
 char message[] = "Hello";
 
 static inline void gpio_set_mode(uint16_t pin, uint8_t mode) {
-	GPIO_TypeDef *gpio = GPIO(PINBANK(pin));
-	int n = PINNO(pin);
+	GPIO_Registers *gpio = GPIO(GET_PIN_BANK(pin));
+	int n = GET_PIN_NO(pin);
 	gpio->MODER &= ~(3U << (n * 2));
 	gpio->MODER |= (mode & 3U) << (n * 2);
 }
 
 static inline void gpio_write(uint16_t pin, bool val) {
-	GPIO_TypeDef *gpio = GPIO(PINBANK(pin));
-	gpio->BSRR = (1U << PINNO(pin)) << (val ? 0 : 16);
+	GPIO_Registers *gpio = GPIO(GET_PIN_BANK(pin));
+	gpio->BSRR = (1U << GET_PIN_NO(pin)) << (val ? 0 : 16);
 }
 
 static inline void delay(volatile uint32_t counter) {
@@ -123,16 +153,17 @@ __attribute__((naked, noreturn)) void _reset(void) {
 // Vector table - STM32G4 has 16 system + 91 STM32 specific interrupts = 107
 // detail: read VECTOR_TABLE.md
 __attribute__((section(".vectors"))) void (*const vector_table[16 + 91])(void) = {
-	_estack = 0, // Initial stack pointer
-	_reset = 1,	 // Reset handler
-  // rest is left empty
+	_estack, // Pointer to Initial Stack
+	_reset,	 // Pointer to the _reset function (will be used as ENTRY)
+  	// ...the rest is left empty, meaning vector interrupts are uninitialized. 
+	// hence, if we get an interrupt, it simply does nothing
 };
 
 int main() {
-	uint16_t led = PIN('A', 5);
+	uint16_t led = CREATE_PIN_MASK('A', 5); // A5 is the built-in LED for Nucleo-G474RET. turned into binary representation
 
-	// Enable GPIOB clock
-	RCC->AHB2ENR |= BIT(PINBANK(led));
+	// Enable GPIOA clock by activating the correct RCC. activating GPIOA from PIN_BANK A
+	RCC->AHB2ENR |= BIT(GET_PIN_BANK(led));
 
 	// Configure LED pin as output
 	gpio_set_mode(led, GPIO_MODE_OUTPUT);
