@@ -7,6 +7,7 @@
 #define PINNO(pin) ((pin) & 255)
 #define PINBANK(pin) ((pin) >> 8)
 
+// these types are used to represent and with it read/wrire to the hardware registers. it acts as register offset (4 bytes each), added to a given base register
 typedef struct {
 	volatile uint32_t MODER;
 	volatile uint32_t OTYPER;
@@ -19,7 +20,7 @@ typedef struct {
 	volatile uint32_t AFRL;
 	volatile uint32_t AFRH;
 	volatile uint32_t BRR;
-} GPIO_TypeDef;
+} GPIO_Registers;
 
 typedef struct {
 	volatile uint32_t CR;
@@ -61,7 +62,7 @@ typedef struct {
 	volatile uint32_t CSR;
 	volatile uint32_t CRRCR;
 	volatile uint32_t CCIPR2;
-} RCC_TypeDef;
+} RCC_Registers;
 
 #define GPIO(bank) ((GPIO_TypeDef *)(0x48000000 + 0x400 * (bank)))
 #define RCC ((RCC_TypeDef *)0x40021000)
