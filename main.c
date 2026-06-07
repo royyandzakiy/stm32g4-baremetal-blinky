@@ -122,8 +122,9 @@ __attribute__((naked, noreturn)) void _reset(void) {
 // Vector table - STM32G4 has 16 system + 91 STM32 specific interrupts = 107
 // detail: read VECTOR_TABLE.md
 __attribute__((section(".vectors"))) void (*const vector_table[16 + 91])(void) = {
-	_estack, // Initial stack pointer
-	_reset,	 // Reset handler
+	_estack = 0, // Initial stack pointer
+	_reset = 1,	 // Reset handler
+  // rest is left empty
 };
 
 int main() {
