@@ -1,11 +1,12 @@
 # STM32 Baremetal Blinky
 
-![stm32g0-blockdiagram](docs/stm32g0-blockdiagram.png)
+An attempt to understand how baremetal works
 
-- APB/AHB/etc lines are a bus, connection between peripherals
-- GPIOs/DAC/ADC is a peripheral, consisting of many different ports
+Successfully running on a win11 machine
 
 Based on this playlist: https://www.youtube.com/playlist?list=PLzijHiItASCkDCIj_4c-66Lve59c5lylq
+
+[![E-Paper Climate Logger](https://img.youtube.com/vi/5VjgzlnC6I0&/maxresdefault.jpg)](https://www.youtube.com/watch?v=5VjgzlnC6I0&list=PLzijHiItASCkDCIj_4c-66Lve59c5lylq&index=9&t=15s)
 
 ## Success Build, Flash, Blinking
 
