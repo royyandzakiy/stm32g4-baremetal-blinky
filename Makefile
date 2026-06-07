@@ -1,3 +1,4 @@
+# Makefile
 CFLAGS ?= -mcpu=cortex-m4 -mthumb -Wall
 
 LDFAGS ?= -T link.ld -nostdlib

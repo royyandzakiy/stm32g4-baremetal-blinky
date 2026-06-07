@@ -1,3 +1,4 @@
+// main.c
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -33,7 +34,7 @@ enum {
 };
 
 static inline void gpio_set_mode(uint16_t pin, uint8_t mode) {
-	GPIO_TypeDef *gpio = GPIO(GPIOBANK(pin));
+	GPIO_TypeDef *gpio = GPIO(PINBANK(pin));
 	int n = PINNO(pin);
 	gpio->MODER &= ~(3U << (n * 2));
 	gpio->MODER |= (mode & 3U) << (n * 2); // set new mode
@@ -86,7 +87,7 @@ typedef struct {
 
 // Enable GPIO Peripheral
 static inline void gpio_write(uint16_t pin, bool val) {
-	GPIO_TypeDef *gpio = GPIO(GPIOBANK(pin));
+	GPIO_TypeDef *gpio = GPIO(PINBANK(pin));
 	gpio->BSRR = (1U << PINNO(pin)) << (val ? 0 : 16);
 };
 
@@ -103,6 +104,19 @@ __attribute__((naked, noreturn)) void _reset(void) {
 	for (long *dst = &_sdata, *src = &_sidata; dst < &_edata;)
 		*dst++ = *src++;
 }
+
+/**
+// main.c
+__attribute__((naked, noreturn)) void _reset(void) {
+	for (;;)
+		(void)0; // infinite loop
+}
+
+extern void _estack(void); // define link.ld
+
+// 16 standard & 91 stm32-specific handlers
+__attribute__((section(".vectors"))) void (*const tab[16 + 91])(void) = {_estack, _reset};
+*/
 
 int main() {
 	uint16_t led = PIN('B', 7);
