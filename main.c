@@ -73,6 +73,9 @@ enum {
 	GPIO_MODE_ANALOG
 };
 
+int counter = 42;
+char message[] = "Hello";
+
 static inline void gpio_set_mode(uint16_t pin, uint8_t mode) {
 	GPIO_TypeDef *gpio = GPIO(PINBANK(pin));
 	int n = PINNO(pin);
@@ -96,16 +99,16 @@ extern uint32_t _sbss, _ebss, _sdata, _edata, _sidata;
 extern void _estack(void);
 extern int main(void);
 
-// Reset handler - this is the entry point
+// Reset handler - this is the entry point ENTRY(_reset)
 __attribute__((naked, noreturn)) void _reset(void) {
 	// Initialize .bss to zero
-	for (uint32_t *dst = &_sbss; dst < &_ebss; dst++) {
-		*dst = 0;
+	for (uint32_t *ram_memory_ptr = &_sbss; ram_memory_ptr < &_ebss; ram_memory_ptr++) {
+		*ram_memory_ptr = 0;
 	}
 
 	// Copy .data from flash to RAM
-	for (uint32_t *dst = &_sdata, *src = &_sidata; dst < &_edata;) {
-		*dst++ = *src++;
+	for (uint32_t *ram_memory_ptr = &_sdata, *src = &_sidata; ram_memory_ptr < &_edata;) {
+		*ram_memory_ptr++ = *src++;
 	}
 
 	// Call main
@@ -117,6 +120,7 @@ __attribute__((naked, noreturn)) void _reset(void) {
 }
 
 // Vector table - STM32G4 has 16 system + 91 STM32 specific interrupts = 107
+// detail: read VECTOR_TABLE.md
 __attribute__((section(".vectors"))) void (*const vector_table[16 + 91])(void) = {
 	_estack, // Initial stack pointer
 	_reset,	 // Reset handler

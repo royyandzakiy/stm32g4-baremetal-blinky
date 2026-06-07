@@ -1,6 +1,6 @@
 # Makefile
 CFLAGS ?= -mcpu=cortex-m4 -mthumb -Wall -O0
-LDFLAGS ?= -T link.ld -nostdlib
+LDFLAGS ?= -T linker_script.ld -nostdlib
 LIBS = -lc -lm -lgcc
 
 build: firmware.bin

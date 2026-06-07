@@ -7,7 +7,7 @@
 
 Based on this playlist: https://www.youtube.com/playlist?list=PLzijHiItASCkDCIj_4c-66Lve59c5lylq
 
-## Success Build & Flash
+## Success Build, Flash, Blinking
 
 ```bash
 C:\project-coding\iot\202606\stm32-baremetal-blinky>make
